@@ -11,12 +11,12 @@ function GameBoard() {
 
     if (!drawCanvas || !displayCanvas) return;
 
-    const drawContext = drawCanvas.getContext("2d") as CanvasRenderingContext2D;
     const displayContext = displayCanvas.getContext("2d") as CanvasRenderingContext2D;
-    displayContext.fillStyle = "orange";
-    drawContext.fillStyle = "blue";
-
+    displayContext.fillStyle = "purple";
     displayContext.fillRect(20, 20, 30, 30);
+
+    const drawContext = drawCanvas.getContext("2d") as CanvasRenderingContext2D;
+    drawContext.fillStyle = "purple";
 
     // draws a 3x3 box around (floor(x), floor(y))
     const drawPoint = (x: number, y: number) => {
@@ -52,32 +52,37 @@ function GameBoard() {
       lastY = y;
     }
 
-    let isDrawing = false
-
-    drawCanvas.addEventListener("mousemove", (e) => {
-      console.log("move")
-      if (!isDrawing) return;
-
-      drawBrush(e, true)
+    let isPointerDown = false;
+    drawCanvas.addEventListener("pointerdown", (e) => {
+      isPointerDown = true;
+      drawCanvas.setPointerCapture(e.pointerId);
+      drawBrush(e, false)
     });
 
-    window.addEventListener("mousedown", (e) => {
-      isDrawing = true;
+    drawCanvas.addEventListener("pointerup", (e) => {
+      isPointerDown = false;
+      drawCanvas.releasePointerCapture(e.pointerId);
+    });
+
+    drawCanvas.addEventListener("pointerenter", (e) => {
+      if (!isPointerDown) return;
 
       drawBrush(e, false)
     });
-    window.addEventListener("mouseup", () => {
-      isDrawing = false;
+    drawCanvas.addEventListener("pointermove", (e) => {
+      if (!isPointerDown) return;
+
+      drawBrush(e, true)
     });
   }, [])
 
   return (
     <div style = {{
-      height: "100vh",
-      width: "100vw",
+      position: "relative",
+      height: "calc(min(80vh, 80vw))",
+      aspectRatio: "1 / 1",
 
       isolation: "isolate",
-      backgroundColor: "white",
     }}>
       <canvas
         ref = {drawCanvasRef}
@@ -112,7 +117,7 @@ function GameBoard() {
 
           pointerEvents: "none",
           imageRendering: "pixelated",
-          mixBlendMode: "exclusion",
+          mixBlendMode: "screen",
         }}>
       </canvas>
     </div>
