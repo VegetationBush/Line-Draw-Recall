@@ -1,6 +1,54 @@
 import { useEffect, useRef } from "react"
+import { createCatmullRomSpline } from "@/util/spline"
+import type { Point } from "@/util/spline"
+import { randInt } from "@/util/random"
 
-const CANVAS_SIZE = 100
+const CANVAS_SIZE = 200
+function distance(a: Point, b: Point): number {
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return dx * dx + dy * dy; // squared distance (faster)
+}
+
+export function sortByNearestNeighbor(points: Point[]): Point[] {
+  if (points.length === 0) return [];
+
+  const remaining = [...points];
+  const ordered: Point[] = [];
+
+  // start from first point (or random if you prefer)
+  let current = remaining.shift()!;
+  ordered.push(current);
+
+  while (remaining.length > 0) {
+    let nearestIndex = 0;
+    let nearestDist = distance(current, remaining[0]);
+
+    for (let i = 1; i < remaining.length; i++) {
+      const d = distance(current, remaining[i]);
+      if (d < nearestDist) {
+        nearestDist = d;
+        nearestIndex = i;
+      }
+    }
+
+    current = remaining.splice(nearestIndex, 1)[0];
+    ordered.push(current);
+  }
+
+  return ordered;
+}
+const generateRandomCurve = () => {
+  const points = randInt(4, 50);
+  const generatedPoints: Point[] = []
+  for (let i = 0; i < points; i++) {
+    generatedPoints[i] = {x: randInt(0, CANVAS_SIZE), y: randInt(0, CANVAS_SIZE)}
+  }
+
+  return createCatmullRomSpline(sortByNearestNeighbor(generatedPoints));
+}
+
+
 function GameBoard() {
   const drawCanvasRef = useRef<HTMLCanvasElement | null>(null); // for user draw
   const displayCanvasRef = useRef<HTMLCanvasElement | null>(null); // for prompt/answer
@@ -12,10 +60,21 @@ function GameBoard() {
     if (!drawCanvas || !displayCanvas) return;
 
     const displayContext = displayCanvas.getContext("2d") as CanvasRenderingContext2D;
+    displayContext.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
     displayContext.fillStyle = "purple";
     displayContext.fillRect(20, 20, 30, 30);
 
+    // lazily draw a curve, for now
+    const curve = generateRandomCurve();
+    for (let i = 0; i < 750; i++) {
+      const {x, y} = curve(i / 750);
+      const fx = Math.floor(x);
+      const fy = Math.floor(y);
+      displayContext.fillRect(fx-1, fy-1, 3, 3);
+    }
+
     const drawContext = drawCanvas.getContext("2d") as CanvasRenderingContext2D;
+    drawContext.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
     drawContext.fillStyle = "purple";
 
     // draws a 3x3 box around (floor(x), floor(y))
