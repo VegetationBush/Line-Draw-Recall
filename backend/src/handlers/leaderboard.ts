@@ -5,33 +5,33 @@ import pg from "pg";
 
 const { Pool } = pg;
 
-let pool: pg.Pool;
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
+});
 
-function getPool() {
-  if (!pool) {
-    pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-    });
-  }
-  return pool;
+interface LeaderboardRow {
+  id: number,
+  name: string,
+  score: number,
+  created_at: string,
 }
 
 const getLeaderboard = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
-  const result = await getPool().query(
+  const result = await pool.query(
     "SELECT * FROM leaderboard ORDER BY score DESC"
   );
-  console.log(result.rows)
 
   const data: LeaderboardResponse = {
-    entries: [
-      { name: "Alice", score: 1000 },
-      { name: "Bob", score: 800 },
-      { name: "Jack", score: 700 },
-      { name: "Quinn", score: 600 },
-      { name: "Geronimo", score: 500 },
-    ],
+    entries: [],
     lastUpdated: Date.now(),
   };
+  result.rows.forEach((item: LeaderboardRow) => {
+    data.entries.push({
+      name: item.name,
+      score: item.score,
+    })
+  })
+
   return {
     statusCode: 200,
     body: JSON.stringify(data)

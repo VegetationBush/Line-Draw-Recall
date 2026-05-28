@@ -15,7 +15,8 @@
     "@types/node": "^25.9.1",
     "@types/pg": "^8.20.0",
     "serverless": "^4.36.1",
-    "serverless-offline": "^14.7.0"
+    "serverless-offline": "^14.7.0",
+    "tsx": "^4.22.3"
   },
   "dependencies": {
     "@line-draw-recall/shared": "*",

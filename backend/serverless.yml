@@ -1,13 +1,21 @@
-# "org" ensures this Service is used with the correct Serverless Framework Access Key.
-org: vegetationbush
-# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
-app: serverless
-service: backend
+plugins:
+  - serverless-offline
 
 provider:
   name: aws
-  runtime: nodejs22.x
+  runtime: nodejs20.x
   region: us-east-1
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+    websocketPort: 3001
+    lambdaPort: 3002
+    useChildProcesses: true
+
+org: vegetationbush
+app: serverless
+service: backend
 
 functions:
   leaderboard:
@@ -19,6 +27,3 @@ functions:
       - httpApi:
           path: /leaderboard
           method: post
-
-plugins:
-  - serverless-offline
