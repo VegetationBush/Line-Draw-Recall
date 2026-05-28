@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "@line-draw-recall/backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,16 +9,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@prisma/client": "^7.8.0",
-    "@vercel/node": "^5.8.4",
-    "axios": "^1.16.1",
-    "dotenv": "^17.4.2",
-    "prisma": "^6.19.3"
-  },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.161",
+    "@types/dotenv": "^6.1.1",
     "@types/node": "^25.9.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
+    "@types/pg": "^8.20.0",
+    "serverless": "^4.36.1",
+    "serverless-offline": "^14.7.0"
+  },
+  "dependencies": {
+    "@line-draw-recall/shared": "*",
+    "aws-lambda": "^1.0.6",
+    "dotenv": "^17.4.2",
+    "pg": "^8.21.0"
   }
 }

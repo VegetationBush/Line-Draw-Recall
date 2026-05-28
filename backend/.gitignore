@@ -1,33 +1,71 @@
+# =========================
 # Dependencies
+# =========================
 node_modules/
-package-lock.json
+.pnp/
+.pnp.js
 
-# Environment
+# =========================
+# Environment variables
+# =========================
 .env
 .env.local
 .env.*.local
 
-# Vercel
-.vercel/
-.vercel_build_output/
+# Serverless env files
+serverless.env.yml
 
+# =========================
+# Serverless Framework
+# =========================
+.serverless/
+.serverless_plugins/
+.webpack/
+.terraform/
+.terraform.lock.hcl
+
+# Offline / emulators
+*.log
+offline/
+local-*
+
+# =========================
 # Build output
+# =========================
 dist/
-.next/
+build/
+out/
+coverage/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# TypeScript
+*.tsbuildinfo
 
-# OS
-.DS_Store
-Thumbs.db
-
+# =========================
 # Logs
+# =========================
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# Testing
+# =========================
+.jest/
+test-results/

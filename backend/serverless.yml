@@ -1,0 +1,24 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: vegetationbush
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: serverless
+service: backend
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  region: us-east-1
+
+functions:
+  leaderboard:
+    handler: src/handlers/leaderboard.handler
+    events:
+      - httpApi:
+          path: /leaderboard
+          method: get
+      - httpApi:
+          path: /leaderboard
+          method: post
+
+plugins:
+  - serverless-offline
