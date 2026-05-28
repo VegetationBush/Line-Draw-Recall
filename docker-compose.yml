@@ -1,17 +1,18 @@
-version: "3.8"
+version: '3.8'
+
 services:
-  db:
-    image: postgres:16
-    container_name: my-postgres
-    restart: always
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: line-draw-recall-db
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: mydb
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
-      - linedrawrecall_pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  linedrawrecall_pgdata:
+  postgres_data:
